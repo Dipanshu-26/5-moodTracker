@@ -1,0 +1,1627 @@
+# Build a Complete "Daily Journal with Mood Tracker" Web Application
+
+Act as a **senior frontend developer and UI/UX engineer**.
+
+Build a complete, production-quality **Daily Journal with Mood Tracker** web application using only:
+
+* HTML5
+* CSS3
+* Vanilla JavaScript (ES6+)
+* Browser Local Storage as the database
+
+Do **not** use React, Angular, Vue, Bootstrap, Tailwind, jQuery, or any backend/database.
+
+The application should be fully functional by opening `index.html` in a browser.
+
+---
+
+# 1. Application Overview
+
+Create a modern personal journaling application where users can:
+
+1. View a dashboard/home page.
+2. Add a journal entry for today.
+3. Add a journal entry for any selected date.
+4. Select and save their mood.
+5. View all previous journal entries.
+6. Search and filter journal entries.
+7. Edit existing journal entries.
+8. Delete journal entries.
+9. View basic journaling and mood statistics.
+10. Persist all journal data using browser Local Storage.
+
+The application should feel like a combination of:
+
+* Notion
+* Google Keep
+* Modern personal journal applications
+* Minimal productivity dashboards
+
+The UI should be clean, elegant, calm, modern, and distraction-free.
+
+---
+
+# 2. Design Requirements
+
+## Overall Style
+
+Use a modern desktop-first design.
+
+Visual characteristics:
+
+* Minimal
+* Clean
+* Soft rounded corners
+* Subtle shadows
+* Plenty of whitespace
+* Modern typography
+* Card-based layout
+* Soft neutral background
+* Professional color palette
+* Smooth hover transitions
+* Small micro-interactions
+* Good visual hierarchy
+
+Avoid:
+
+* Overly colorful UI
+* Excessive gradients
+* Clutter
+* Old-fashioned form controls
+* Excessive animations
+* Large unnecessary borders
+
+Use CSS variables for the complete color system.
+
+Example:
+
+```css
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border: #e2e8f0;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+```
+
+You may improve these colors if necessary.
+
+---
+
+# 3. Folder Structure
+
+Create the following folder structure:
+
+```text
+daily-journal/
+│
+├── index.html
+│
+├── pages/
+│   ├── journal.html
+│   └── add-journal.html
+│
+├── css/
+│   ├── style.css
+│   ├── responsive.css
+│   └── components.css
+│
+├── js/
+│   ├── app.js
+│   ├── storage.js
+│   ├── journal.js
+│   ├── dashboard.js
+│   └── utils.js
+│
+└── assets/
+    └── icons/
+```
+
+Keep JavaScript modular and maintainable.
+
+Do not put all JavaScript into one huge file.
+
+---
+
+# 4. Pages
+
+Create three main pages.
+
+## Page 1 — Home / Dashboard
+
+File:
+
+```text
+index.html
+```
+
+The dashboard should contain:
+
+### Header
+
+Show:
+
+* Application logo/icon
+* Application name: "Daily Journal"
+* Navigation
+
+  * Home
+  * My Journal
+  * Add Journal
+* Current date
+* Optional theme toggle
+
+Navigation should clearly indicate the currently active page.
+
+---
+
+## Dashboard Welcome Section
+
+Show a greeting such as:
+
+```text
+Good evening, Dipanshu 👋
+How was your day?
+```
+
+The greeting should dynamically change according to the time:
+
+Morning:
+
+```text
+Good morning 👋
+```
+
+Afternoon:
+
+```text
+Good afternoon 👋
+```
+
+Evening:
+
+```text
+Good evening 👋
+```
+
+Night:
+
+```text
+Good night 👋
+```
+
+Do not hardcode the user's name. Use:
+
+```text
+Good evening 👋
+```
+
+or optionally allow a display name through a small settings area.
+
+---
+
+# 5. Today's Journal Card
+
+Create a prominent card:
+
+```text
+Today's Journal
+
+Tuesday, September 8, 2026
+
+How are you feeling today?
+
+😊 Happy
+
+[ Add Today's Journal ]
+```
+
+If today's journal already exists, change the CTA to:
+
+```text
+View Today's Journal
+```
+
+and show:
+
+* Today's mood
+* Short preview of today's journal
+* Edit button
+
+The application must automatically determine today's date using JavaScript.
+
+---
+
+# 6. Statistics Section
+
+Display useful statistics using cards.
+
+Example:
+
+```text
+Total Entries
+24
+
+This Month
+12
+
+Current Streak
+5 days
+
+Most Common Mood
+😊 Happy
+```
+
+Calculate these dynamically from Local Storage.
+
+Do not hardcode statistics.
+
+---
+
+# 7. Recent Journals Section
+
+Show the latest 3–5 journal entries.
+
+Example:
+
+```text
+Recent Journals
+
+😊
+Monday, September 7
+Had a really productive day...
+
+😌
+Sunday, September 6
+Spent some time with family...
+
+😄
+Saturday, September 5
+Went out with friends...
+```
+
+Each card should have:
+
+* Mood emoji
+* Date
+* Journal title
+* Short preview
+* View/Edit action
+
+Add:
+
+```text
+View All Journals →
+```
+
+---
+
+# 8. Page 2 — My Journal
+
+File:
+
+```text
+pages/journal.html
+```
+
+This page displays all saved journal entries.
+
+Header:
+
+```text
+My Journal
+
+All your thoughts, memories and moods in one place.
+```
+
+---
+
+# 9. Search
+
+Add a search box:
+
+```text
+🔍 Search journals...
+```
+
+Search should work against:
+
+* Journal title
+* Journal content
+* Mood
+* Date
+
+Search should update results immediately as the user types.
+
+---
+
+# 10. Filters
+
+Provide filters:
+
+### Date filter
+
+Options:
+
+```text
+All Dates
+Today
+This Week
+This Month
+This Year
+Custom Date
+```
+
+### Mood filter
+
+Options:
+
+```text
+All Moods
+😊 Happy
+😄 Excited
+😌 Calm
+🙂 Good
+😐 Neutral
+😔 Sad
+😞 Bad
+😡 Angry
+😰 Anxious
+```
+
+Filters must work together with search.
+
+---
+
+# 11. Journal Display
+
+Use a responsive card/grid layout.
+
+Each journal card should contain:
+
+```text
+😊 Happy
+
+September 8, 2026
+
+A Productive Day
+
+Today was a very productive day...
+
+--------------------------------
+
+Edit       Delete
+```
+
+Show the complete journal when the user clicks the card or "View".
+
+Do not show the entire journal content if it is very long.
+
+Create a preview using JavaScript.
+
+Example:
+
+```text
+Today was a very productive day. I completed...
+```
+
+---
+
+# 12. Empty State
+
+If no journals exist, show a beautiful empty state.
+
+Example:
+
+```text
+📖
+
+Your journal is empty
+
+Start capturing your thoughts, feelings and
+memories today.
+
+[ Write Your First Journal ]
+```
+
+Do not leave the page blank.
+
+---
+
+# 13. Page 3 — Add New Journal
+
+File:
+
+```text
+pages/add-journal.html
+```
+
+This page is used to create a journal entry.
+
+The default date must be **today's date**.
+
+However, the user must be able to select any date.
+
+---
+
+# 14. Add Journal Form
+
+Create the following fields.
+
+## Date
+
+```text
+Date
+
+[ September 8, 2026 ]
+```
+
+Use:
+
+```html
+<input type="date">
+```
+
+Default value should automatically be today's date.
+
+Do not restrict the date to today.
+
+The user should be able to create journal entries for:
+
+* Past dates
+* Today
+* Future dates
+
+---
+
+# 15. Journal Title
+
+Field:
+
+```text
+Title
+[ Give your day a title... ]
+```
+
+Title is optional.
+
+Maximum length:
+
+```text
+100 characters
+```
+
+Show a character counter.
+
+---
+
+# 16. Journal Content
+
+Use a large textarea/editor.
+
+Placeholder:
+
+```text
+Write about your day...
+
+What happened today?
+What are you grateful for?
+What did you learn?
+How are you feeling?
+```
+
+Content should be required.
+
+Show a character counter.
+
+---
+
+# 17. Mood Selector
+
+Create a beautiful mood selector.
+
+Available moods:
+
+```text
+😊 Happy
+😄 Excited
+😌 Calm
+🙂 Good
+😐 Neutral
+😔 Sad
+😞 Bad
+😡 Angry
+😰 Anxious
+```
+
+Each mood should be selectable as a card/button.
+
+Example:
+
+```text
+😊
+Happy
+
+😄
+Excited
+
+😌
+Calm
+
+🙂
+Good
+
+😐
+Neutral
+
+😔
+Sad
+
+😞
+Bad
+
+😡
+Angry
+
+😰
+Anxious
+```
+
+Exactly one mood must be selected.
+
+Make the selected mood visually obvious.
+
+---
+
+# 18. Form Actions
+
+Buttons:
+
+```text
+Cancel
+Save Journal
+```
+
+Cancel should return to the previous page or journal list.
+
+Save Journal should:
+
+1. Validate the form.
+2. Create a journal object.
+3. Save it to Local Storage.
+4. Show a success notification.
+5. Redirect to My Journal or Home.
+
+---
+
+# 19. Validation
+
+Implement client-side validation.
+
+### Date
+
+Required.
+
+### Title
+
+Optional.
+
+Maximum:
+
+```text
+100 characters
+```
+
+### Content
+
+Required.
+
+Minimum:
+
+```text
+10 characters
+```
+
+Maximum:
+
+```text
+5000 characters
+```
+
+### Mood
+
+Required.
+
+Show friendly validation messages.
+
+Examples:
+
+```text
+Please write something in your journal.
+
+Journal content must be at least 10 characters.
+
+Please select your mood.
+```
+
+Do not use browser-only validation as the sole validation mechanism. Implement JavaScript validation too.
+
+---
+
+# 20. Local Storage Database
+
+Use Local Storage as the application's database.
+
+Storage key:
+
+```text
+dailyJournalEntries
+```
+
+Store data as JSON.
+
+Example:
+
+```javascript
+[
+    {
+        id: "journal_1725812345678",
+        date: "2026-09-08",
+        title: "A Productive Day",
+        content: "Today was a very productive day...",
+        mood: {
+            id: "happy",
+            label: "Happy",
+            emoji: "😊"
+        },
+        createdAt: "2026-09-08T10:30:00.000Z",
+        updatedAt: "2026-09-08T10:30:00.000Z"
+    }
+]
+```
+
+Create reusable storage functions:
+
+```javascript
+getJournals()
+saveJournal(journal)
+updateJournal(id, updatedJournal)
+deleteJournal(id)
+getJournalById(id)
+clearAllJournals()
+```
+
+Always safely parse Local Storage JSON.
+
+Handle the case where Local Storage is empty.
+
+---
+
+# 21. Prevent Duplicate Entries
+
+A user should normally have only one journal entry per date.
+
+Before saving:
+
+```text
+Does an entry already exist for this date?
+```
+
+If yes, show:
+
+```text
+You already have a journal for this date.
+
+Would you like to edit the existing journal?
+```
+
+Provide:
+
+```text
+Edit Existing
+Cancel
+```
+
+Do not silently overwrite an existing journal.
+
+---
+
+# 22. Edit Journal
+
+Users must be able to edit existing entries.
+
+When clicking:
+
+```text
+Edit
+```
+
+Open the Add/Edit Journal page.
+
+Populate:
+
+* Date
+* Title
+* Content
+* Mood
+
+Change the button from:
+
+```text
+Save Journal
+```
+
+to:
+
+```text
+Update Journal
+```
+
+After updating:
+
+1. Update Local Storage.
+2. Show success notification.
+3. Redirect to My Journal.
+
+---
+
+# 23. Delete Journal
+
+Allow users to delete a journal.
+
+When Delete is clicked, show a confirmation modal:
+
+```text
+Delete Journal?
+
+Are you sure you want to delete this journal?
+This action cannot be undone.
+
+Cancel
+Delete
+```
+
+Only delete after confirmation.
+
+Update Local Storage immediately after deletion.
+
+---
+
+# 24. Journal Details Modal
+
+When the user clicks a journal card, optionally open a modal.
+
+Modal should show:
+
+```text
+😊 Happy
+
+A Productive Day
+
+September 8, 2026
+
+Today was a very productive day...
+
+[Edit] [Delete] [Close]
+```
+
+Make the modal responsive.
+
+Allow closing using:
+
+* Close button
+* Clicking outside the modal
+* Escape key
+
+---
+
+# 25. Dashboard Statistics
+
+Calculate dynamically.
+
+## Total Entries
+
+Number of journal entries.
+
+## This Month
+
+Number of entries created for the current month.
+
+## Current Streak
+
+Calculate consecutive journal dates.
+
+Example:
+
+```text
+September 8
+September 7
+September 6
+September 5
+```
+
+Current streak:
+
+```text
+4 days
+```
+
+If today has no journal, calculate appropriately based on the most recent consecutive sequence.
+
+## Most Common Mood
+
+Count mood occurrences and display the most frequently used mood.
+
+Example:
+
+```text
+😊 Happy
+```
+
+If there are no entries:
+
+```text
+—
+```
+
+---
+
+# 26. Additional Statistics
+
+If practical, also include:
+
+```text
+Longest Streak
+Average Entries / Week
+Most Active Day
+```
+
+Keep the dashboard visually clean. Do not overcrowd it.
+
+---
+
+# 27. Mood Analytics
+
+Create a small mood summary section.
+
+Example:
+
+```text
+Mood Overview
+
+😊 Happy       8
+😄 Excited     4
+😌 Calm        6
+😐 Neutral     3
+😔 Sad         2
+```
+
+Represent this using simple CSS bars rather than an external chart library.
+
+The bars should be generated dynamically from Local Storage.
+
+---
+
+# 28. Navigation
+
+Desktop navigation:
+
+```text
+Daily Journal
+
+Home
+My Journal
+Add Journal
+```
+
+Mobile navigation should become:
+
+* Hamburger menu
+* Or bottom navigation
+
+Choose whichever provides the best UX.
+
+The navigation must work correctly across all pages.
+
+---
+
+# 29. Responsive Design
+
+Desktop-first.
+
+Support at least:
+
+```text
+1440px
+1200px
+992px
+768px
+576px
+375px
+```
+
+At desktop:
+
+* Sidebar or horizontal navigation
+* Multi-column cards
+* Spacious dashboard
+
+At tablet:
+
+* Reduce spacing
+* Two-column cards where appropriate
+
+At mobile:
+
+* Single-column layout
+* Full-width buttons
+* Compact navigation
+* Stack form fields
+* Mood selector should wrap cleanly
+* Statistics should become 2-column or 1-column
+* Journal cards should fit the viewport
+* Modal should have appropriate margins
+
+Do not allow horizontal scrolling.
+
+---
+
+# 30. Accessibility
+
+Follow basic accessibility best practices.
+
+Use:
+
+* Semantic HTML
+* `<header>`
+* `<nav>`
+* `<main>`
+* `<section>`
+* `<footer>`
+* Proper `<label>` elements
+* Accessible buttons
+* ARIA labels where needed
+* Keyboard navigation
+* Visible focus states
+* Sufficient color contrast
+
+Do not use clickable `<div>` elements when a button or link is appropriate.
+
+---
+
+# 31. Toast Notifications
+
+Create a reusable toast notification component.
+
+Types:
+
+```text
+success
+error
+warning
+info
+```
+
+Examples:
+
+```text
+✓ Journal saved successfully
+
+✓ Journal updated successfully
+
+✓ Journal deleted successfully
+
+⚠ Please select a mood
+```
+
+Toast should automatically disappear after a few seconds.
+
+---
+
+# 32. Confirmation Modal
+
+Create a reusable confirmation modal component.
+
+Use it for:
+
+* Delete journal
+* Clear all journal data
+
+Do not use `alert()` for normal application interactions.
+
+---
+
+# 33. Theme
+
+Implement a modern light theme.
+
+Optionally implement dark mode using CSS variables.
+
+If dark mode is implemented:
+
+* Store preference in Local Storage.
+* Use a theme toggle.
+* Respect system preference when no saved preference exists.
+
+Example storage key:
+
+```text
+dailyJournalTheme
+```
+
+---
+
+# 34. Date Handling
+
+Use native JavaScript Date APIs.
+
+Display dates in human-friendly format.
+
+Example:
+
+```text
+September 8, 2026
+```
+
+For recent entries, optionally show:
+
+```text
+Today
+Yesterday
+2 days ago
+```
+
+but retain the full date where useful.
+
+Avoid external date libraries.
+
+Be careful with timezone-related date bugs.
+
+For date input values, use local date formatting rather than blindly using `toISOString()` because UTC conversion can shift the date.
+
+Create a utility function such as:
+
+```javascript
+getLocalDateString()
+```
+
+that returns:
+
+```text
+YYYY-MM-DD
+```
+
+---
+
+# 35. Utility Functions
+
+Create reusable functions in:
+
+```text
+js/utils.js
+```
+
+Include functions such as:
+
+```javascript
+formatDate()
+formatDateInput()
+getLocalDateString()
+truncateText()
+generateId()
+escapeHtml()
+showToast()
+openModal()
+closeModal()
+getGreeting()
+```
+
+Use reusable utilities instead of duplicating code.
+
+---
+
+# 36. Security / Safe Rendering
+
+Even though this is a local-only application, prevent HTML injection when displaying journal content.
+
+Do NOT directly insert unsanitized journal content using:
+
+```javascript
+innerHTML
+```
+
+Prefer:
+
+```javascript
+textContent
+```
+
+or create sanitized HTML carefully.
+
+The application must safely display user-entered journal text.
+
+---
+
+# 37. Initial Demo Data
+
+On the first application launch, optionally create 3–5 demo journal entries if Local Storage is completely empty.
+
+Demo data should make the UI look populated during development.
+
+Example:
+
+```text
+A Productive Monday
+Happy
+
+A Relaxing Sunday
+Calm
+
+Great Weekend
+Excited
+```
+
+However, clearly separate demo data from real user-created data.
+
+Preferably provide a small "Load Demo Data" or "Clear Data" mechanism rather than automatically inserting demo data if this might confuse users.
+
+---
+
+# 38. Clear All Data
+
+Add an optional data management section.
+
+Allow:
+
+```text
+Clear All Journals
+```
+
+Before clearing:
+
+```text
+Delete all journals?
+
+This will permanently remove all journal entries from this browser.
+
+Cancel
+Delete Everything
+```
+
+After deletion:
+
+```text
+All journals have been deleted.
+```
+
+---
+
+# 39. Empty / Loading / Error States
+
+Handle:
+
+### Empty state
+
+No journals exist.
+
+### Search empty state
+
+Example:
+
+```text
+No journals found
+
+Try changing your search or filters.
+```
+
+### Local Storage error
+
+If Local Storage is unavailable, show a friendly message:
+
+```text
+Unable to save your journal in this browser.
+Please check your browser storage settings.
+```
+
+Do not allow the application to crash.
+
+---
+
+# 40. UI Components
+
+Create reusable CSS classes/components for:
+
+* Buttons
+* Cards
+* Inputs
+* Textareas
+* Mood selector
+* Navigation
+* Modal
+* Toast
+* Statistics cards
+* Journal cards
+* Empty states
+* Badges
+* Dropdowns
+* Search box
+* Filters
+
+Use consistent naming conventions.
+
+Example:
+
+```text
+.btn
+.btn-primary
+.btn-secondary
+.card
+.stat-card
+.journal-card
+.mood-card
+.modal
+.toast
+.empty-state
+```
+
+---
+
+# 41. Icons
+
+Do not depend on an external icon library unless absolutely necessary.
+
+Prefer:
+
+* Unicode symbols
+* Emoji
+* Inline SVG icons
+
+If using SVG, keep them lightweight and accessible.
+
+Examples:
+
+```text
+📖 Journal
+🏠 Home
+➕ Add
+🔍 Search
+✏️ Edit
+🗑️ Delete
+😊 Mood
+```
+
+---
+
+# 42. UX Details
+
+Add subtle interactions:
+
+* Button hover
+* Card hover
+* Focus states
+* Smooth modal opening
+* Toast animation
+* Selected mood animation
+* Filter transitions
+* Save button feedback
+
+Keep animations subtle.
+
+Use CSS:
+
+```css
+transition: all 0.2s ease;
+```
+
+Do not over-animate.
+
+---
+
+# 43. Form UX
+
+When submitting the journal:
+
+* Prevent duplicate submissions.
+* Disable Save button briefly while processing.
+* Validate before saving.
+* Preserve entered values if validation fails.
+* Automatically focus the first invalid field.
+* Show inline validation messages.
+
+---
+
+# 44. Application Routing
+
+Because this is a static application, do not implement a complex SPA router.
+
+Use normal HTML pages:
+
+```text
+index.html
+pages/journal.html
+pages/add-journal.html
+```
+
+Use query parameters for editing:
+
+```text
+pages/add-journal.html?id=journal_123
+```
+
+The Add Journal page should detect the ID and switch to edit mode.
+
+Example:
+
+```javascript
+const params = new URLSearchParams(window.location.search);
+const journalId = params.get("id");
+```
+
+---
+
+# 45. File Responsibilities
+
+## index.html
+
+Dashboard structure only.
+
+Load:
+
+```text
+css/style.css
+css/components.css
+css/responsive.css
+js/storage.js
+js/utils.js
+js/dashboard.js
+js/app.js
+```
+
+---
+
+## pages/journal.html
+
+Journal list/search/filter structure.
+
+Load:
+
+```text
+css/style.css
+css/components.css
+css/responsive.css
+js/storage.js
+js/utils.js
+js/journal.js
+js/app.js
+```
+
+---
+
+## pages/add-journal.html
+
+Add/edit form.
+
+Load:
+
+```text
+css/style.css
+css/components.css
+css/responsive.css
+js/storage.js
+js/utils.js
+js/journal.js
+js/app.js
+```
+
+---
+
+# 46. JavaScript Architecture
+
+Use clear responsibilities.
+
+## storage.js
+
+Responsible only for Local Storage operations.
+
+Example:
+
+```javascript
+const STORAGE_KEY = "dailyJournalEntries";
+
+function getJournals() {}
+
+function saveJournal(journal) {}
+
+function updateJournal(id, journal) {}
+
+function deleteJournal(id) {}
+
+function getJournalById(id) {}
+```
+
+---
+
+## utils.js
+
+Reusable utilities.
+
+---
+
+## dashboard.js
+
+Responsible for:
+
+* Dashboard statistics
+* Recent journals
+* Today's journal
+* Mood summary
+* Greeting
+
+---
+
+## journal.js
+
+Responsible for:
+
+* Journal form
+* Journal list
+* Search
+* Filters
+* Edit
+* Delete
+* Modal
+* Form validation
+
+---
+
+## app.js
+
+Responsible for:
+
+* Shared navigation
+* Active navigation item
+* Theme
+* Global initialization
+
+---
+
+# 47. Code Quality Requirements
+
+Write clean, readable, maintainable code.
+
+Requirements:
+
+* Use `const` and `let`, not `var`.
+* Use meaningful variable names.
+* Use functions rather than large blocks of code.
+* Avoid duplicate code.
+* Add comments where logic is not obvious.
+* Keep functions reasonably small.
+* Avoid global variables where possible.
+* Handle errors gracefully.
+* Do not leave unused code.
+* Do not use placeholder functionality.
+* All buttons and navigation links must work.
+
+---
+
+# 48. Browser Compatibility
+
+The application should work in modern:
+
+* Google Chrome
+* Microsoft Edge
+* Firefox
+* Safari
+
+Do not use unnecessary experimental browser APIs.
+
+---
+
+# 49. Final Acceptance Criteria
+
+The application is complete only when all of the following work:
+
+### Home
+
+* [ ] Dashboard loads.
+* [ ] Greeting changes according to time.
+* [ ] Today's date is displayed.
+* [ ] Today's journal status is displayed.
+* [ ] Add Today's Journal works.
+* [ ] Statistics are calculated dynamically.
+* [ ] Recent journals appear.
+* [ ] Mood statistics appear.
+
+### My Journal
+
+* [ ] All journals are displayed.
+* [ ] Search works.
+* [ ] Mood filter works.
+* [ ] Date filter works.
+* [ ] Search + filters work together.
+* [ ] Journal details can be opened.
+* [ ] Edit works.
+* [ ] Delete works.
+* [ ] Empty state works.
+
+### Add Journal
+
+* [ ] Today's date is selected by default.
+* [ ] Any date can be selected.
+* [ ] Title can be entered.
+* [ ] Content can be entered.
+* [ ] Mood can be selected.
+* [ ] Validation works.
+* [ ] Journal saves to Local Storage.
+* [ ] Duplicate dates are handled.
+* [ ] Success notification appears.
+
+### Edit
+
+* [ ] Existing journal loads correctly.
+* [ ] Existing values are populated.
+* [ ] User can change date/title/content/mood.
+* [ ] Update saves correctly.
+* [ ] Local Storage is updated.
+
+### Delete
+
+* [ ] Confirmation modal appears.
+* [ ] Cancel works.
+* [ ] Delete works.
+* [ ] Local Storage updates.
+* [ ] UI refreshes immediately.
+
+### Responsive
+
+* [ ] Desktop layout works.
+* [ ] Tablet layout works.
+* [ ] Mobile layout works.
+* [ ] No horizontal scrolling.
+* [ ] Forms are usable on mobile.
+* [ ] Navigation is usable on mobile.
+
+---
+
+# 50. Important Implementation Instruction
+
+Do not just generate a basic prototype.
+
+Generate a **complete, polished, functional application**.
+
+Before finishing:
+
+1. Create all required files.
+2. Ensure all relative paths work correctly from both root pages and `/pages/`.
+3. Verify JavaScript has no obvious runtime errors.
+4. Verify Local Storage CRUD functionality.
+5. Verify navigation between pages.
+6. Verify Add/Edit/Delete functionality.
+7. Verify search and filters.
+8. Verify dashboard statistics.
+9. Verify responsive CSS.
+10. Verify empty states.
+11. Verify validation.
+12. Verify modal and toast behavior.
+13. Verify date handling and timezone behavior.
+14. Ensure the application works by opening `index.html`.
+
+If you are running in an IDE such as VS Code, create/update the files directly rather than merely showing snippets.
+
+At the end, provide a concise summary of:
+
+* Files created
+* Main features implemented
+* Local Storage schema
+* How to run the application
+* Any assumptions made
+* Any recommended future enhancements
+
+The final result should look like a **real modern journaling product**, not a basic HTML CRUD demo.
